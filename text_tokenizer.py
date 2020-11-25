@@ -4,7 +4,7 @@ from keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 import numpy as np
 from config import *
-
+import pickle
 
 class TextTokenizer:
     def __init__(self, df):
@@ -96,7 +96,17 @@ class TextTokenizer:
         x_tr, y_tr = self.remove_tags(x_tr, y_tr)
         x_val, y_val = self.remove_tags(x_val, y_val)
 
-        print(f"{x_tr}\n{x_val}\n{x_voc}")
-        print(f"{y_tr}\n{y_val}\n{y_voc}")
+        # print(f"{x_tr}\n{x_val}\n{x_voc}")
+        # print(f"{y_tr}\n{y_val}\n{y_voc}")
+        print(f"\ny_tokenizer: {y_tokenizer} \nx_tokenizer: {x_tokenizer}")
+
+        import pickle
+
+        # saving
+        with open('saved_model_data/y_tokenizer.pickle', 'wb') as handle:
+            pickle.dump(y_tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
+
+        with open('saved_model_data/x_tokenizer.pickle', 'wb') as handle:
+            pickle.dump(x_tokenizer, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
         return x_tr, x_val, x_voc, y_tr, y_val, y_voc
