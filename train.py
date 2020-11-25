@@ -35,4 +35,5 @@ def train_model():
     plot_results(history)
     model.save('saved_model_data/lstm_model.h5')
 
+
 train_model()
