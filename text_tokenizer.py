@@ -15,8 +15,8 @@ class TextTokenizer:
         # self.max_text_len = 30
         # self.max_summary_len = 8
 
-    def split_data(df):
-        return train_test_split(np.array(df['text']), np.array(df['summary']), test_size=0.1, random_state=0, shuffle=True)
+    def split_data(self):
+        return train_test_split(np.array(self.df['text']), np.array(self.df['summary']), test_size=0.1, random_state=0, shuffle=True)
 
     def rarewords(self, tokenizer):
         thresh = 4
@@ -53,10 +53,10 @@ class TextTokenizer:
 
     def tokenizer(self):
         # prepare a tokenizer for reviews on training data
-        x_tr, x_val, y_tr, y_val = self.split_data(self.df)
+        x_tr, x_val, y_tr, y_val = self.split_data()
         x_tokenizer = Tokenizer()
         x_tokenizer.fit_on_texts(list(x_tr))
-        print("Proportion of Rarewords and its coverage in entire Text:")
+        print("\nProportion of Rarewords and its coverage in entire Text:")
         cnt, tot_cnt, freq, tot_freq = self.rarewords(x_tokenizer)
         # prepare a tokenizer for reviews on training data
         x_tokenizer = Tokenizer(num_words=tot_cnt - cnt)
@@ -76,7 +76,7 @@ class TextTokenizer:
         # prepare a tokenizer for reviews on training data
         y_tokenizer = Tokenizer()
         y_tokenizer.fit_on_texts(list(y_tr))
-        print("Proportion of Rarewords and its coverage in entire Summary:")
+        print("\nProportion of Rarewords and its coverage in entire Summary:")
         self.rarewords(y_tokenizer)
         # prepare a tokenizer for reviews on training data
         y_tokenizer = Tokenizer(num_words=tot_cnt - cnt)
@@ -87,8 +87,8 @@ class TextTokenizer:
         y_val_seq = y_tokenizer.texts_to_sequences(y_val)
 
         # padding zero upto maximum length
-        y_tr = pad_sequences(y_tr_seq, maxlen=self.max_summary_len, padding='post')
-        y_val = pad_sequences(y_val_seq, maxlen=self.max_summary_len, padding='post')
+        y_tr = pad_sequences(y_tr_seq, maxlen=max_summary_len, padding='post')
+        y_val = pad_sequences(y_val_seq, maxlen=max_summary_len, padding='post')
 
         # size of vocabulary
         y_voc = y_tokenizer.num_words + 1
