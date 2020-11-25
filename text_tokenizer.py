@@ -3,12 +3,17 @@ from keras.preprocessing.sequence import pad_sequences
 
 from sklearn.model_selection import train_test_split
 import numpy as np
+from config import *
 
 
 class TextTokenizer:
-    def __init__(self):
-        self.max_text_len = 30
-        self.max_summary_len = 8
+    def __init__(self, df):
+        if df.empty:
+            return "Data Frame is Empty, check preprocessing"
+        else:
+            self.df = df
+        # self.max_text_len = 30
+        # self.max_summary_len = 8
 
     def split_data(df):
         return train_test_split(np.array(df['text']), np.array(df['summary']), test_size=0.1, random_state=0, shuffle=True)
@@ -46,9 +51,9 @@ class TextTokenizer:
         x_val = np.delete(x_val, ind, axis=0)
         return x_val, y_val
 
-    def tokenizer(self, df):
+    def tokenizer(self):
         # prepare a tokenizer for reviews on training data
-        x_tr, x_val, y_tr, y_val = self.split_data(df)
+        x_tr, x_val, y_tr, y_val = self.split_data(self.df)
         x_tokenizer = Tokenizer()
         x_tokenizer.fit_on_texts(list(x_tr))
         print("Proportion of Rarewords and its coverage in entire Text:")
@@ -62,8 +67,8 @@ class TextTokenizer:
         x_val_seq = x_tokenizer.texts_to_sequences(x_val)
 
         # padding zero upto maximum length
-        x_tr = pad_sequences(x_tr_seq, maxlen=self.max_text_len, padding='post')
-        x_val = pad_sequences(x_val_seq, maxlen=self.max_text_len, padding='post')
+        x_tr = pad_sequences(x_tr_seq, maxlen=max_text_len, padding='post')
+        x_val = pad_sequences(x_val_seq, maxlen=max_text_len, padding='post')
 
         # size of vocabulary ( +1 for padding token)
         x_voc = x_tokenizer.num_words + 1
@@ -93,3 +98,5 @@ class TextTokenizer:
 
         print(f"{x_tr}\n{x_val}\n{x_voc}")
         print(f"{y_tr}\n{y_val}\n{y_voc}")
+
+        return x_tr, x_val, x_voc, y_tr, y_val, y_voc
