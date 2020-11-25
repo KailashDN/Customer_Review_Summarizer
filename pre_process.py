@@ -61,7 +61,7 @@ class ReviewProcessing:
         fig.savefig('Analysis/distribution of the sequences.png')
 
         # fig = length_df.hist(bins=30)
-        plt.show()
+        # plt.show()
 
     def pre_process(self):
         # remove null and duplicates
