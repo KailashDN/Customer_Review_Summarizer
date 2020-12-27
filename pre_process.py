@@ -9,8 +9,7 @@ from config import *
 
 
 class ReviewProcessing:
-    def __init__(self, review_len=100000):
-        self.filepath = datapath
+    def __init__(self, review_len=100000): self.filepath = datapath
         self.data = pd.read_csv(self.filepath, nrows=review_len)
         # self.contraction_mapping2 = open('contraction_mapping').read()
         self.contraction_mapping = cont_mapping
